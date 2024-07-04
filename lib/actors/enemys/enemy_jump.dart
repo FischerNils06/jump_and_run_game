@@ -1,6 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:jump_and_run_game/actors/player.dart';
-import 'package:jump_and_run_game/pages/game_page.dart';
 import 'dart:math';
 
 class EnemyJump extends SpriteComponent with HasGameRef {
@@ -11,18 +9,23 @@ class EnemyJump extends SpriteComponent with HasGameRef {
   bool toSpawn = false;
   bool spawned = false;
   bool collidedWithEnemy = false;
+  int score = 0;
 
 
   @override
   Future<void> onLoad() async {
     final screenSize = gameRef.size;
-    enemyWidths = [screenSize.y/8, screenSize.y/10, screenSize.y/12, screenSize.y/15, screenSize.y/20];
+    enemyWidths = [screenSize.y/10, screenSize.y/12, screenSize.y/15, screenSize.y/20];
     enemyHights = [screenSize.y, screenSize.y/4, screenSize.y/4.5, screenSize.y/5];
     double enemyWidth = enemyWidths[Random().nextInt(enemyWidths.length)];
     double enemyHight = enemyHights[Random().nextInt(enemyHights.length)];
     sprite = await Sprite.load('enemy_jump.png');
     size = Vector2(enemyWidth, enemyHight);
-    position = Vector2(screenSize.x, -screenSize.y / 5 - size.y);
+    if (enemyHight == screenSize.y) {
+      position = Vector2(screenSize.x, -screenSize.y / 5 -size.y - screenSize.x / 35);
+    } else {
+      position = Vector2(screenSize.x, -screenSize.y / 5 - size.y);
+    }
     priority = 1;
 
     return super.onLoad();
@@ -30,7 +33,11 @@ class EnemyJump extends SpriteComponent with HasGameRef {
 
   @override
   void update (double dt) {
-    position.x -= 2;
+    if (score <= 1000) {
+      position.x -= (100 + score) * dt;
+    } else {
+      position.x -= 1100 * dt;
+    }
 
     if (position.x <= -size.x) {
         toRemove = true;

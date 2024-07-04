@@ -11,13 +11,19 @@ import 'package:jump_and_run_game/actors/enemys/enemy_jump.dart';
 
 class Player extends SpriteComponent with HasGameRef {
 
-  late final double jumpForce;
-  final double gravity = 9.81;
-  final double maxVelocity = 300;
+  late double jumpForce;
+  late final double initialJumpForce;
+  double gravity = 9.81;
+  double initialgravity = 9.81;
+  double maxVelocity = 300;
   bool isOnTheGround = false;
   bool isJumping = false;
   bool isdoubletapped = false;
+  bool isScoreUpdated = false;
   Vector2 velocity = Vector2.zero();
+  int score = 0;
+  int currentScore = 0;
+  int gravityValue = 1;
 
     
   @override
@@ -27,7 +33,8 @@ class Player extends SpriteComponent with HasGameRef {
     size = Vector2(screenSize.x / 30, screenSize.x / 30);
     position = Vector2(screenSize.x/7, -screenSize.y / 5 - size.y);
     priority = 2;
-    jumpForce = gameRef.size.y * 1; 
+    initialJumpForce = gameRef.size.y;
+    jumpForce = initialJumpForce; 
 
     return super.onLoad();
   }
@@ -40,14 +47,24 @@ class Player extends SpriteComponent with HasGameRef {
     } else {
       isOnTheGround = false;
     }
+    
+    jumpForce = gameRef.size.y + (score * gameRef.size.y / 100);
+
+    if (currentScore != score) {
+      isScoreUpdated = true;
+    }
+
+    currentScore = score;
+
+    gravity = initialgravity * ((jumpForce * jumpForce) / (initialJumpForce * initialJumpForce)) * gravityValue;
+    
+    print(gravity);
     addGravity(dt);
 
     if (isJumping) {
       jump(dt);
     }
-
-    
-  
+ 
     super.update(dt);
   }
   
@@ -71,6 +88,10 @@ class Player extends SpriteComponent with HasGameRef {
     } else {
       position.y = -groundHeight - size.y;
     }
+  }
+
+  void changeGravity(int value) {
+      gravityValue = value;
   }
 
   
