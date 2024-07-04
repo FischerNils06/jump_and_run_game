@@ -6,15 +6,17 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:jump_and_run_game/actors/enemys/enemy_jump.dart';
 
 
 class Player extends SpriteComponent with HasGameRef {
 
-  final double jumpforce = 500;
+  late final double jumpForce;
   final double gravity = 9.81;
   final double maxVelocity = 300;
   bool isOnTheGround = false;
   bool isJumping = false;
+  bool isdoubletapped = false;
   Vector2 velocity = Vector2.zero();
 
     
@@ -22,9 +24,10 @@ class Player extends SpriteComponent with HasGameRef {
   Future<void> onLoad() async {
     final screenSize = gameRef.size;
     sprite = await Sprite.load('character.png');
-    size = Vector2(screenSize.x / 10, screenSize.x / 10);
+    size = Vector2(screenSize.x / 30, screenSize.x / 30);
     position = Vector2(screenSize.x/7, -screenSize.y / 5 - size.y);
-    priority = 1;
+    priority = 2;
+    jumpForce = gameRef.size.y * 1; 
 
     return super.onLoad();
   }
@@ -38,19 +41,19 @@ class Player extends SpriteComponent with HasGameRef {
       isOnTheGround = false;
     }
     addGravity(dt);
+
     if (isJumping) {
       jump(dt);
     }
+
     
-
-
+  
     super.update(dt);
   }
   
-  
   void jump(double dt) {
     if (isOnTheGround) {
-      velocity.y = -jumpforce;
+      velocity.y = -jumpForce;
       position.y += velocity.y * dt;
       isOnTheGround = false;
     } 
