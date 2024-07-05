@@ -1,11 +1,6 @@
-// ignore_for_file: unnecessary_import
-
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
-import 'package:flame/extensions.dart';
-import 'package:flame/game.dart';
 import 'package:jump_and_run_game/actors/player.dart';
 import 'package:jump_and_run_game/actors/enemies/enemy_jump.dart';
 import 'package:jump_and_run_game/items/item.dart';

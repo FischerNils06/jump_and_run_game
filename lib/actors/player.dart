@@ -1,12 +1,4 @@
-// ignore_for_file: unnecessary_overrides
-
-import 'dart:math';
-
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
-import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
-import 'package:jump_and_run_game/actors/enemies/enemy_jump.dart';
 
 
 class Player extends SpriteComponent with HasGameRef {
@@ -18,7 +10,6 @@ class Player extends SpriteComponent with HasGameRef {
   double maxVelocity = 900;
   bool isOnTheGround = false;
   bool isJumping = false;
-  bool isdoubletapped = false;
   bool isScoreUpdated = false;
   Vector2 velocity = Vector2.zero();
   int score = 0;

@@ -1,9 +1,7 @@
-import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flame/flame.dart';
 import 'package:jump_and_run_game/pages/game_page.dart';
 import 'package:flame/extensions.dart';
 

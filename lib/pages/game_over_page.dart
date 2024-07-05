@@ -1,9 +1,5 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_import, use_key_in_widget_constructors
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class GameOverPage extends SpriteComponent with HasGameRef, TapCallbacks {
 
