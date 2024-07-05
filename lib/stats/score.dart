@@ -3,7 +3,6 @@ import 'package:flame/components.dart';
 class Score extends TextComponent with HasGameRef {
   int score = 0;
   int settedScore = 0;
-  int highscore = 0;
   DateTime startTime = DateTime.now();
   
 

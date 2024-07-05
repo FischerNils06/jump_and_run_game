@@ -7,18 +7,17 @@ import 'package:flame/events.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 import 'package:jump_and_run_game/actors/player.dart';
-import 'package:jump_and_run_game/actors/enemys/enemy_jump.dart';
+import 'package:jump_and_run_game/actors/enemies/enemy_jump.dart';
 import 'package:jump_and_run_game/items/item.dart';
 import 'package:jump_and_run_game/stats/lives.dart';
 import 'package:jump_and_run_game/stats/score.dart';
+import 'package:jump_and_run_game/pages/game_over_page.dart';
 
 
 class GamePage extends World with HasGameRef {
   late SpriteComponent ground = SpriteComponent();
   
   get components => children;
-  late List enemyList = [];
-  bool spawnFirstEnemy = true;
   bool isSwipedDown = false;
   int swipedDown = 0;
   int itemDistance = 0;
@@ -30,6 +29,7 @@ class GamePage extends World with HasGameRef {
   Future<void> onLoad() async {
 
     final screenSize = gameRef.size;
+    gameFinished = false;
 
     ground
       ..sprite = await Sprite.load('ground.png')
@@ -61,6 +61,10 @@ class GamePage extends World with HasGameRef {
     final enemyJumpList = components.whereType<EnemyJump>();
     final playerList = components.whereType<Player>();
     final itemList = components.whereType<Item>();
+    final livesList = components.whereType<Lives>();
+    final scoreList = components.whereType<Score>();
+    final gameOverPageList = components.whereType<GameOverPage>();
+
     if (enemyJumpList.isNotEmpty) {
       final enemyJump = enemyJumpList.first;
       if (enemyJump.toSpawn) {
@@ -82,14 +86,12 @@ class GamePage extends World with HasGameRef {
             playerPosition.y < enemyJumpPosition.y + enemyJump.size.y &&
             playerPosition.y + player.size.y > enemyJumpPosition.y &&
             !enemyJump.collidedWithEnemy) {
-          final livesList = components.whereType<Lives>();
           if (livesList.isNotEmpty) {
             final lives = livesList.first;
             lives.removeLive();
           }
           enemyJump.collidedWithEnemy = true;
         }
-        final scoreList = components.whereType<Score>();
         if (scoreList.isNotEmpty) {
           final score = scoreList.first;
           enemyJump.score = score.score;
@@ -103,13 +105,11 @@ class GamePage extends World with HasGameRef {
             playerPosition.y + player.size.y > itemPosition.y) {
           final itemType = item.getSprite();
           if (itemType == 'star') {
-            final scoreList = components.whereType<Score>();
             if (scoreList.isNotEmpty) {
               final score = scoreList.first;
                 score.setScore();
             }
           } else {
-            final livesList = components.whereType<Lives>();
             if (livesList.isNotEmpty) {
               final lives = livesList.first;
               lives.lives += 1;
@@ -147,16 +147,26 @@ class GamePage extends World with HasGameRef {
 
     }
     }
-    final livesList = components.whereType<Lives>();
     if (livesList.isNotEmpty) {
       final lives = livesList.first;
       if (lives.gameOver) {
-        if (gameFinished) {
-          print('Game Over');
+        if (!gameFinished) {
+          gameOver();
         }
 
       }
     }
+
+    if (gameOverPageList.isNotEmpty) {
+      final gameOverPage = gameOverPageList.first;
+      if (gameOverPage.toRestart) {
+        gameOverPage.toRestart = false;
+        remove(gameOverPage);
+        onLoad();
+      }
+    }
+
+    
    
     super.update(dt);
         
@@ -166,21 +176,64 @@ class GamePage extends World with HasGameRef {
 
 
   void swipeDown () {
-    final player = components.whereType<Player>().first;
-    isSwipedDown = true;
-    player.isJumping = false;
-    player.size = Vector2(gameRef.size.x / 30, gameRef.size.x / 36);
-    player.changeGravity(10);
+    final playerList = components.whereType<Player>();
+    if (playerList.isNotEmpty) {
+      final player = playerList.first;
+      isSwipedDown = true;
+      player.isJumping = false;
+      player.size = Vector2(gameRef.size.x / 30, gameRef.size.x / 36);
+      player.changeGravity(10);
+    }
+    
   }
 
   void swipeUp() {
-    final player = components.whereType<Player>().first;
-    if (!isSwipedDown) {
+    final playerList = components.whereType<Player>();
+    if (playerList.isNotEmpty) {
+      final player = playerList.first;
+      if (!isSwipedDown) {
       player.isJumping = true;
-    } else {
-      isSwipedDown = false;
+      } else {
+        isSwipedDown = false;
+      }
     }
+    
   }
   
+  void gameOver () {
+    gameFinished = true;
+    
+    final livesList = components.whereType<Lives>();
+    if (livesList.isNotEmpty) {
+      final lives = livesList.first;
+      remove(lives);
+    }
+    final scoreList = components.whereType<Score>();
+    if (scoreList.isNotEmpty) {
+      final score = scoreList.first;
+      remove(score);
+    }
+    final playerList = components.whereType<Player>();
+    if (playerList.isNotEmpty) {
+      final player = playerList.first;
+      remove(player);
+    }
+    final enemyJumpList = components.whereType<EnemyJump>();
+    if (enemyJumpList.isNotEmpty) {
+      for (final enemyJump in enemyJumpList) {
+        remove(enemyJump);
+      }
+    }
+    final itemList = components.whereType<Item>();
+    if (itemList.isNotEmpty) {
+      for (final item in itemList) {
+        remove(item);
+      }
+    }
+
+    final gameOverPage = GameOverPage();
+    add(gameOverPage);
+    
+  }
 
 }

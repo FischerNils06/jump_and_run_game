@@ -8,6 +8,7 @@ import 'package:flame/flame.dart';
 void main() {
 WidgetsFlutterBinding.ensureInitialized();
   Flame.device.fullScreen();
+  Flame.device.setLandscape();
   MainGame game = MainGame();
   runApp(GameWidget(game: game));
 }

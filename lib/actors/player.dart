@@ -6,7 +6,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:jump_and_run_game/actors/enemys/enemy_jump.dart';
+import 'package:jump_and_run_game/actors/enemies/enemy_jump.dart';
 
 
 class Player extends SpriteComponent with HasGameRef {
@@ -15,7 +15,7 @@ class Player extends SpriteComponent with HasGameRef {
   late final double initialJumpForce;
   double gravity = 9.81;
   double initialgravity = 9.81;
-  double maxVelocity = 300;
+  double maxVelocity = 900;
   bool isOnTheGround = false;
   bool isJumping = false;
   bool isdoubletapped = false;
@@ -58,7 +58,6 @@ class Player extends SpriteComponent with HasGameRef {
 
     gravity = initialgravity * ((jumpForce * jumpForce) / (initialJumpForce * initialJumpForce)) * gravityValue;
     
-    print(gravity);
     addGravity(dt);
 
     if (isJumping) {
