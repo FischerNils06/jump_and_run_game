@@ -7,6 +7,8 @@ import 'package:jump_and_run_game/items/item.dart';
 import 'package:jump_and_run_game/stats/lives.dart';
 import 'package:jump_and_run_game/stats/score.dart';
 import 'package:jump_and_run_game/pages/game_over_page.dart';
+import 'package:flame/extensions.dart';
+import 'package:flame/game.dart';
 
 
 class GamePage extends World with HasGameRef {

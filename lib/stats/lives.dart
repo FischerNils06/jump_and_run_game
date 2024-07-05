@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/game.dart';
 
 class Lives extends TextComponent with HasGameRef {
   int lives = 3;

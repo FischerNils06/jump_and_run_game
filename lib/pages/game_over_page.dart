@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+  
 
 class GameOverPage extends SpriteComponent with HasGameRef, TapCallbacks {
 
